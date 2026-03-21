@@ -1,6 +1,8 @@
-import {express} from 'express'
-import {cors} from 'cors'
+import express from 'express'
+import cors from 'cors'
+import dotenv from 'dotenv'
 
+dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -17,3 +19,9 @@ app.use((req, res, next) => {
     );
     next();
 });
+
+const isDev = process.env.NODE_ENV == 'development'
+const PORT = process.env.PORT || (isDev ? 5100: 5000)
+app.listen(PORT,() => {
+    console.log(`Server running on PORT ${PORT}`)
+} );
