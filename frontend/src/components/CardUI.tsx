@@ -1,10 +1,10 @@
 const CardUI = () => {
-    const addCard(e: any) => {
+    const addCard = (e: any) => {
         e.preventDefault();
         alert('addCard()');
     }
 
-    const searchCard(e:any) => {
+    const searchCard = (e:any) => {
         e.preventDefault();
         alert('searchCard()');
     }
