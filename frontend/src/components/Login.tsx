@@ -1,10 +1,11 @@
 import {useState} from 'react'
 
-const [message, setMessage] = useState('')
-const [loginName, setLoginName] = useState('');
-const [loginPassword, setPassword] = useState('');
+
 export default function Login()
 {
+    const [message, setMessage] = useState('')
+    const [loginName, setLoginName] = useState('');
+    const [loginPassword, setPassword] = useState('');
     const doLogin = (e:any) => {
         e.preventDefault();
         alert('doIt()' + loginName + loginPassword);
