@@ -6,9 +6,34 @@ export default function Login()
     const [message, setMessage] = useState('')
     const [loginName, setLoginName] = useState('');
     const [loginPassword, setPassword] = useState('');
-    const doLogin = (e:any) => {
+    const doLogin = async (e:any) : Promise<void> => {
         e.preventDefault();
-        alert('doIt()' + loginName + loginPassword);
+        const obj = {login: loginName, password:loginPassword};
+        const js = JSON.stringify(obj);
+        try
+        {
+            const response = await fetch(
+                'http://localhost:5100/api/login', 
+                {method: 'POST', body:js, headers:{'Content-Type':'application/json'}}
+            );
+            const res = JSON.parse(await response.text());
+            if(res.id <= 0)
+            {
+                setMessage('User/Password combination incorrect'); 
+            }
+            else
+            {
+                const user = {firstName:res.firstName, lastName:res.lastName, id:res.id}
+                localStorage.setItem('user_data', JSON.stringify(user));
+                setMessage('');
+                window.location.href = '/cards';
+            }
+        }
+        catch(error:any)
+        {
+            alert(error.toString());
+            return;
+        }
     }
 
     const handleSetUsername = (e:any) => {
