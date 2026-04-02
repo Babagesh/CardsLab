@@ -1,6 +1,12 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import {MongoClient} from 'mongodb'
+
+const url = 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.8.2';
+const client = new MongoClient(url)
+await client.connect()
+
 
 var cardList =
 [
@@ -110,18 +116,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    );
-    res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PATCH, DELETE, OPTIONS'
-    );
-    next();
-});
 
 app.post('/api/addcard', async (req, res, next) => {
     var error = '';
@@ -134,14 +128,18 @@ app.post('/api/addcard', async (req, res, next) => {
 app.post('/api/login', async (req, res, next) => {
     var error = '';
     const {login, password} = req.body
-    var id = -1;
+    const db = client.db('COP4331Cards');
+    const results = await db.collection('Users').find({Login: login, Password: password}).toArray();
+
+    var id = -1
     var fn = '';
-    var ln = '';
-    if(login.toLowerCase() == 'rickl' && password == 'COP4331')
+    var ln = ''
+
+    if(results.length > 0)
     {
-        id = 1;
-        fn = 'Rick';
-        ln = 'Leinecker';
+        id = results[0].UserID;
+        fn = results[0].FirstName;
+        ln = results[0].LastName;
     }
     else
     {
