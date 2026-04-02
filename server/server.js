@@ -130,16 +130,16 @@ app.post('/api/login', async (req, res, next) => {
     const {login, password} = req.body
     const db = client.db('COP4331Cards');
     const results = await db.collection('Users').find({Login: login, Password: password}).toArray();
-
+    const firstResult = results[0]
     var id = -1
     var fn = '';
     var ln = ''
 
     if(results.length > 0)
     {
-        id = results[0].UserID;
-        fn = results[0].FirstName;
-        ln = results[0].LastName;
+        id = firstResult._id;
+        fn = firstResult.FirstName;
+        ln = firstResult.LastName;
     }
     else
     {
